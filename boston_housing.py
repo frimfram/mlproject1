@@ -218,6 +218,14 @@ def fit_predict_model(city_data):
     print "House: " + str(x)
     print "Prediction: " + str(y)
 
+    #use nearest neighbor to find reasonable value for this feature set
+    indexes = find_nearest_neighbor_indexes(x, X)
+    sum_prices = []
+    for i in indexes:
+        sum_prices.append(city_data.target[i])
+    neighbor_avg = np.mean(sum_prices)
+    print "Nearest neighbor average: " + str(neighbor_avg)
+
 #In the case of the documentation page for GridSearchCV, it might be the case that the example is just a demonstration of syntax for use of the function, rather than a statement about 
 
 def main():
@@ -245,6 +253,14 @@ def main():
     # Tune and predict Model
     fit_predict_model(city_data)
 
+from sklearn.neighbors import NearestNeighbors
+def find_nearest_neighbor_indexes(x, X):
+    neigh = NearestNeighbors( n_neighbors = 25 )
+    neigh.fit(X)
+    distance, indexes = neigh.kneighbors(x)
+    #print distance
+    #print indexes
+    return indexes
 
 if __name__ == "__main__":
     main()
